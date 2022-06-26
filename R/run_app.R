@@ -1,7 +1,6 @@
 #' Run the Shiny Application
 #'
-#' @param ... arguments to pass to golem_opts. 
-#' See `?golem::get_golem_options` for more details.
+#' @param short_checklist Whether to create the app for the long or the short checklist
 #' @inheritParams shiny::shinyApp
 #'
 #' @export
@@ -12,8 +11,17 @@ run_app <- function(
   options = list(), 
   enableBookmarking = NULL,
   uiPattern = "/",
-  ...
+  short_checklist = FALSE
 ) {
+  
+  # Load the .json, which defines the structure of the application
+  # TODO: change short checklist json accordingly
+  if (short_checklist) {
+    checklist <- NULL
+  } else {
+    checklist <- TransparencyChecklistGolem:::long
+  }
+  
   with_golem_options(
     app = shinyApp(
       ui = app_ui,
@@ -23,6 +31,8 @@ run_app <- function(
       enableBookmarking = enableBookmarking, 
       uiPattern = uiPattern
     ), 
-    golem_opts = list(...)
+    golem_opts = list(
+      checklist = checklist
+    )
   )
 }

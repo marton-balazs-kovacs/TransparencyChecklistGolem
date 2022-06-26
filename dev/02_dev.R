@@ -15,12 +15,33 @@
 
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
-usethis::use_package( "thinkr" )
+usethis::use_package( "stringr" )
+usethis::use_package("shinyWidgets")
+usethis::use_package("shinyjs")
+usethis::use_package("shinyBS")
+usethis::use_package("shinyFeedback")
+usethis::use_package("shinyanimate")
+usethis::use_package("shinythemes")
+usethis::use_package("shinycssloaders")
+usethis::use_package("bsplus")
+usethis::use_package("jsonlite")
+usethis::use_package("RCurl") # for checking whether url.exists
+usethis::use_package("digest")
+usethis::use_package("knitr")
+usethis::use_package("markdown")
+usethis::use_package("rmarkdown")
+usethis::use_dev_package("gemstones", remote = "github::thinkr-open/gemstones")
+
+## Add translations ----
+gemstones::use_jqueryi18next()
 
 ## Add modules ----
 ## Create a module infrastructure in R/
-golem::add_module( name = "name_of_module1" ) # Name of the module
-golem::add_module( name = "name_of_module2" ) # Name of the module
+golem::add_module( name = "language" ) # Name of the module
+golem::add_module( name = "sections" ) # Name of the module
+golem::add_module( name = "header" )
+golem::add_module( name = "intro" )
+golem::add_module( name = "report" )
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
@@ -35,7 +56,8 @@ golem::add_css_file( "custom" )
 
 ## Add internal datasets ----
 ## If you have data in your package
-usethis::use_data_raw( name = "my_dataset", open = FALSE ) 
+usethis::use_data_raw( name = "transform_json", open = FALSE ) 
+usethis::use_data_raw( name = "questions", open = FALSE ) 
 
 ## Tests ----
 ## Add one line by test you want to create
