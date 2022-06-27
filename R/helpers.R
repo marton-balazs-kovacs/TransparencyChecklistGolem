@@ -124,7 +124,7 @@ switchButtons <- function(ind, id = NULL, answers = NULL){
   
   # switch between different input types
   switch (ind$Type,
-    "select"    = pickerInputTranslatable  (inputId = ind$Name, choices = answerOptions),
+    "select"    = pickerInputTranslatable (inputId = ind$Name, choices = answerOptions),
     "radio"     = radioButtonTranslatable  (inputId = ind$Name, choices = answerOptions),
     "textInput" = textInput                (inputId = ind$Name, label = with_i18n(ind$Label, ind$Label)),
     "textArea"  = textAreaInputTranslatable(inputId = ind$Name, placeholder = answerOptions, rows = 6)
@@ -155,25 +155,24 @@ translateLabel <- function(label) {return(label)}
 ## Translatable widgets ----
 #' @description This function hard codes html for shinyWidgets::pickerInput with translatable options
 pickerInputTranslatable <- function(inputId, choices) {
-  div(class = "form-group shiny-input-container",
-      tags$label(class = "control-label", `for` = inputId),
-      pickerInputTranslatableOptions(choices, inputId)
-      )
-}
-
-pickerInputTranslatableOptions <- function(choices, inputId) {
   options <- list()
   for(i in seq_along(choices)) {
-    options[[i]] <- pickerInputTranslatableOption(choices[i])
+    options[[i]] <- tags$option(value = choices[i], names(choices[i])) |> with_i18n(names(choices[i]))
   }
   
-  tags$select(id = inputId, class = "selectpicker form-control",
-              HTML('<option hidden selected><span class="i18n" data-key="Please select an option">Please select an option</span></option>'),
-              options)
-}
-
-pickerInputTranslatableOption <- function(choice) {
-  tags$option(value = choice, names(choice)) |> with_i18n(names(choice))
+  div(
+    class = "form-group shiny-input-container",
+    tags$label(
+      class = "control-label",
+      `for` = inputId
+      ),
+    tags$select(
+      id = inputId,
+      class = "form-control",
+      HTML('<option value="" disabled selected data-i18n="Please select an option">Please select an option</option>'),
+      options
+      )
+    )
 }
 
 #' @description This function hard codes html for shiny::radioButton with translatable options 
