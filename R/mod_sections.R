@@ -21,11 +21,19 @@ mod_sections_ui <- function(id, checklist){
     fluidRow(
       column(2),
       column(2, align = "center",
-             actionButton(ns("previousButton"), "Go to previous section", icon = icon("arrow-circle-left"))
+             actionButton(
+               ns("previousButton"),
+               "Go to previous section",
+               icon = icon("arrow-circle-left")
+               ) |> with_i18n("Go to previous section")
       ),
       column(4),
       column(2, align = "center",
-             actionButton(ns("nextButton"), "Go to next section", icon = icon("arrow-circle-right"))
+             actionButton(
+               ns("nextButton"),
+               "Go to next section",
+               icon = icon("arrow-circle-right")
+               ) |> with_i18n("Go to next section")
       ),
       column(2)
     )

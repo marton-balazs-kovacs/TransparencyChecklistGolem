@@ -12,12 +12,17 @@ mod_report_ui <- function(id){
   tagList(
     absolutePanel(
       shinyWidgets::dropdown(
-        h4('Generate and Download Report'),
+        h4('Generate and Download Report') |> with_i18n(NULL),
         shinyWidgets::pickerInput(
-          inputId = NS(id, "save_as"), label = "Format",
+          inputId = NS(id, "save_as"),
+          label = "Format",
           choices = c("pdf", "html", "word", "rtf"),
           multiple = FALSE, width = 'auto', inline = FALSE
-          ),
+          ) |> with_i18n(
+            "Format",
+            selector = "label",
+            attribute = "text"
+            ),
         div(
           style = "display:inline-block",
           # Open window for a preview
@@ -29,7 +34,7 @@ mod_report_ui <- function(id){
             color = "primary",
             size = "xs",
             no_outline = FALSE
-            ),
+            ) |> with_i18n("Preview"),
           # Open window for a code
           shinyWidgets::actionBttn(
             inputId = NS(id, "showcode"),
@@ -39,31 +44,37 @@ mod_report_ui <- function(id){
             color = "primary",
             size = "xs",
             no_outline = FALSE
-            )
+            ) |> with_i18n("Show code")
           ),
         br(),
         br(),
-        downloadButton(NS(id, 'report'), 'Download', class = "downbutt"),
+        downloadButton(
+          NS(id, 'report'),
+          'Download',
+          class = "downbutt") |> with_i18n("Download"),
         icon = icon("file-alt"),
         up = TRUE,
-        tooltip = shinyWidgets::tooltipOptions(
-          title = "Click here to create and download report",
-          placement = "left"
-          ),
+        # tooltip = shinyWidgets::tooltipOptions(
+        #   title = "Click here to create and download report",
+        #   placement = "left",
+        #   html = TRUE
+        #   ),
         style = "unite",
-        label = "Generate Report",
+        label = with_i18n("Generate Report", NULL),
         size = "lg",
         inputId = NS(id, "generatereport"),
         width = "20vw",
         class = "fixedButton"
         ),
+      # Tooltip for the "Generate Report" btn
+      title = "Click here to create and download report",
       bottom = "2.5%",
       left = "50%",
       fixed = TRUE,
       width = "auto",
       style = "transform: translate(-50%, +0%); z-index: 1000;"
-      ),
-    textOutput(NS(id, "test"))
+      # Translate the tooltip
+      ) |> with_i18n("Click here to create and download report", attribute = "title")
   )
 }
     
@@ -73,8 +84,6 @@ mod_report_ui <- function(id){
 mod_report_server <- function(id, checklist, answers){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    
-    output$test <- renderPrint({answers()})
     
     # checks which sections are complete
     whichComplete <- reactive({
@@ -201,7 +210,7 @@ mod_report_server <- function(id, checklist, answers){
         answerList = checklist$answerList,
         save_as = input$save_as)
     })
-    output$rmd_test <- renderPrint({RmdFile()})
+
     # render Rmd file in show code modal panel
     # TODO: add shinycssloaders::withSpinner
     output$code <- renderText({
@@ -228,7 +237,7 @@ mod_report_server <- function(id, checklist, answers){
       
       if(input$save_as %in% c("word", "rtf")){
         modalDialog(
-          showNotification("Word and rtf files cannot be previewed in the browser, displaying markdown file",
+          showNotification(with_i18n("Word and rtf files cannot be previewed in the browser, displaying markdown file", NULL),
                            type = "warning", closeButton = FALSE, duration = 7),
           includeMarkdown(RmdPath),
           easyClose = TRUE
@@ -249,6 +258,8 @@ mod_report_server <- function(id, checklist, answers){
     # Show preview modal
     observeEvent(input$preview, {
       showModal(generatePreview())
+      # Trigger translate notification
+      localize(".shiny-notification-content-text")
     })
 
     #### Download ----
