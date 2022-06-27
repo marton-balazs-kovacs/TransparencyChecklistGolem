@@ -30,6 +30,7 @@ usethis::use_package("digest")
 usethis::use_package("knitr")
 usethis::use_package("markdown")
 usethis::use_package("rmarkdown")
+usethis::use_package("purrr")
 usethis::use_dev_package("gemstones", remote = "github::thinkr-open/gemstones")
 
 ## Add translations ----

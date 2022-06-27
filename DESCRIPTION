@@ -13,6 +13,7 @@ Imports:
     htmltools,
     markdown,
     processx,
+    purrr,
     rmarkdown,
     shiny (>= 1.7.1),
     shinythemes,

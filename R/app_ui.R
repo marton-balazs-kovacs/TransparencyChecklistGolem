@@ -49,7 +49,7 @@ app_ui <- function(request) {
         column(1),
         column(
           10,
-          h3("Please select an answer for each item below. If you want to elaborate on your answers, you can do so in the comment box that follows each section.")
+          h3("Please select an answer for each item below. If you want to elaborate on your answers, you can do so in the comment box that follows each section.") |> with_i18n(NULL)
         ),
         column(1)
       ),
@@ -75,7 +75,10 @@ app_ui <- function(request) {
       # info modal
       mod_intro_ui("intro"),
       # Select language
-      mod_language_ui("language")
+      absolutePanel(
+        mod_language_ui("language"),
+        top = "3%", right = "2%", fixed = TRUE, width = "10%"
+      )
     )
   )
 }

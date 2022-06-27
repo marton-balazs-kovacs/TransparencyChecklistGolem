@@ -1,3 +1,6 @@
+# TODO: "All Authors [Given name(s) Surname;]" not translated if used as a key I guess it is because special characters are used
+# have to find a robust way for taking out special characters from keys  and referencing them in the app.
+
 library(rjson)
 library(purrr)
 library(stringr)

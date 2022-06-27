@@ -4,16 +4,17 @@
 renderSection <- function(section, id = NULL, answers = NULL){
   # creates a tab ( can be changed to a fluidrow if we do not want tabs)
   
-  tabPanel(title = section$Name, 
-           value = section$Value, 
-           icon  = tags$i(class = paste0("icon", section$Value, " fa fa-eye")),#icon("table"),
-           #id    = section$Value,
+  tabPanel(
+    title = with_i18n(section$Name, section$Name), 
+    value = section$Value, 
+    icon  = tags$i(class = paste0("icon", section$Value, " fa fa-eye")),
     br(),
     # create the header and an initial info about the section
     fluidRow(column(1),
              column(10,
-                    #h3(section$Name),
-                    if(!is.null(section$Label)) {strong(section$Label)}
+                    if(!is.null(section$Label)) {
+                      strong(with_i18n(section$Label, section$Label))
+                      }
                     ),
              column(1)),
 
@@ -67,7 +68,7 @@ customButton <- function(ind, id = NULL, answers = NULL){
     fluidPage( # wrapping into another fluid page makes a slight indentation of the questions from the text fields
     conditionalPanel(condition = ind$Depends,
                      fluidRow(column(1),
-                              column(6, br(), ind$Label),#, 
+                              column(6, br(), with_i18n(ind$Label, ind$Label)),#, 
                                      #a(ind$href, href = ind$href, target = "_blank"),
                                      #ind$LabelEnd), # this makes the buttons appear horizontally aligned
                               # do not add ns here as it would duplicate ns tag in consequent calls
@@ -75,7 +76,7 @@ customButton <- function(ind, id = NULL, answers = NULL){
                               column(1, br(), # adds exclamation circle next to the item
                                      tags$div(
                                        id = shiny::NS(id, paste0("div", ind$Name, "Checker")),
-                                       title = "This question needs to be answered.",
+                                       title = with_i18n("This question needs to be answered.", "This question needs to be answered."),
                                        tags$i(id = shiny::NS(id,  paste0(ind$Name, "Checker")),
                                               class = 'fa fa-exclamation-circle')
                                        )
@@ -84,17 +85,16 @@ customButton <- function(ind, id = NULL, answers = NULL){
                      )
     )
     )
-  } else{ # when the item is a comment, show the commentary section as a standard textArea stretched over the width of the panel
-    #fluidPage(
+  } else { # when the item is a comment, show the commentary section as a standard textArea stretched over the width of the panel
       conditionalPanel(condition = ind$Depends,
                        fluidRow(column(1),
-                                column(10, br(), strong(ind$Label), br(),
+                                column(10, br(), strong(with_i18n(ind$Label, ind$Label)), br(),
                                        tags$style(type = "text/css", "textarea {width:80%}"),
                                        tags$textarea(ifelse(is.null(answers[[ind$Name]]), "", answers[[ind$Name]]),
                                                      id = shiny::NS(id, ind$Name), placeholder = ind$AnswerType,
-                                                     rows = 5, class = "form-control")),
+                                                     rows = 5, class = "form-control") |> with_i18n(ind$AnswerType, attribute = "placeholder")
+                                       ),
                                 column(1)))
-    #)
   }
 }
 
@@ -126,7 +126,7 @@ switchButtons <- function(ind, id = NULL, answers = NULL){
   switch (ind$Type,
     "select"    = pickerInputTranslatable  (inputId = ind$Name, choices = answerOptions),
     "radio"     = radioButtonTranslatable  (inputId = ind$Name, choices = answerOptions),
-    "textInput" = textInput                (inputId = ind$Name, label = ind$Label),
+    "textInput" = textInput                (inputId = ind$Name, label = with_i18n(ind$Label, ind$Label)),
     "textArea"  = textAreaInputTranslatable(inputId = ind$Name, placeholder = answerOptions, rows = 6)
   )
 }
@@ -173,7 +173,7 @@ pickerInputTranslatableOptions <- function(choices, inputId) {
 }
 
 pickerInputTranslatableOption <- function(choice) {
-  tags$option(value = choice, names(choice))
+  tags$option(value = choice, names(choice)) |> with_i18n(names(choice))
 }
 
 #' @description This function hard codes html for shiny::radioButton with translatable options 
@@ -194,10 +194,17 @@ radioButtonTranslatableOptions <- function(choices, inputId) {
 
 radioButtonTranslatableOption <- function(choice, inputId) {
   div(class = "radio-inline",
+      tags$input(type = "radio", name = inputId, value = choice),  
+        # |> with_i18n(
+        #   names(choice),
+        #   attribute = "value"
+        #   ),
       tags$label(
-        tags$input(type = "radio", name = inputId, value = choice),
-        names(choice)
-        )
+        names(choice),
+        `for` = names(choice)
+        ) |> 
+        with_i18n(names(choice))
+
       )
 }
 

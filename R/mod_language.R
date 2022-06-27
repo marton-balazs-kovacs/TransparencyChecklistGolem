@@ -14,10 +14,8 @@ mod_language_ui <- function(id){
   
   # Add select input
   tagList(
-    absolutePanel(
-      selectInput(ns("language"), "Select Language", language_list, width = "auto"),
-      top = "3%", right = "2%", fixed = TRUE, width = "10%"
-    )
+      selectInput(ns("language"), "Select Language", language_list, width = "auto") |> 
+      with_i18n("Select Language", selector = "label")
   )
 }
     
@@ -31,6 +29,7 @@ mod_language_server <- function(id){
     # Change language
     observeEvent(input$language, {
       change_language(input$language)
+      # Initiate language change on the whole app
       localize("html")
     }, ignoreInit = TRUE)
   })
