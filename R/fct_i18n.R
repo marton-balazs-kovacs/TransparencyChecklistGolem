@@ -117,7 +117,6 @@ get_language <- function(
 #' @noRd
 server_translate <- function(i18n, language_code = NULL) {
   # Get the JSON containing localization
-  print("I am running")
   local <- rjson::fromJSON(file = app_sys("app/www/i18n_locales.json"))
   
   # Filter by language code

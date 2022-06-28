@@ -17,3 +17,10 @@ usethis::use_data(long, overwrite = TRUE, internal = TRUE)
 short_questions <- jsonlite::read_json(path = "inst/app/www/questions.json")
 
 # usethis::use_data(questions, overwrite = TRUE)
+
+# Get all the possible question dependencies for testing
+depends <-
+  map(long$sectionsList, ~flatten(.x["Questions"])) %>% 
+  flatten(.) %>% 
+  flatten(.) %>% 
+  keep(.p = stringr::str_detect(names(.), "Depends"))

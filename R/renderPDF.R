@@ -78,7 +78,7 @@ lang: &languageCode
   # and fill the header with information taken from the question in the head
   date <- format(Sys.time(), '%d/%m/%Y')
   answers$studyTitle <- ifelse(answers$studyTitle == "", "Untitled", answers$studyTitle)
-  
+
   headYaml <- gsub("&studyTitle",         answers$studyTitle,                                  headYaml)
   headYaml <- gsub("&authorNames",        answers$authorNames,                                 headYaml)
   headYaml <- gsub("&correspondingEmail", answers$correspondingEmail,                          headYaml)
@@ -148,7 +148,7 @@ composeQuestions <- function(question, answers = answers, language_code = NULL){
 
   show <- TRUE
   
-  # check whether the section is suppposed to be shown
+  # check whether the section is supposed to be shown
   if(!is.null(question$Depends)){
     show <- gsub(".ind_", "answers$ind_", question$Depends)
     show <- eval(parse(text = show))
@@ -170,7 +170,7 @@ composeQuestions <- function(question, answers = answers, language_code = NULL){
     question$Type <- "comment"
   }
   
-  # make answers bold, but if it is a comment, show it as a quote:
+  # make answers bold, but if it is a comment, show it as a quote
   if( !(question$Type %in% c("comment", "text"))){
     answer <- paste0(" &escape&textbf{", server_translate(answers[[question$Name]], language_code), "} ")
   } else if(question$Type == "comment"){
@@ -181,7 +181,7 @@ composeQuestions <- function(question, answers = answers, language_code = NULL){
   }
   
 
-  # layout Labels:
+  # layout Labels
   if(!is.null(question$href)){
     question$Label <- paste0(question$Label, "[", question$href, "](", question$href, ")")
   }
@@ -190,7 +190,7 @@ composeQuestions <- function(question, answers = answers, language_code = NULL){
   }
   
   if( !(question$Type %in% c("comment", "text"))){
-    label <- paste0(" ", translateLabel(question$Label), " &escape&hfill")
+    label <- paste0(" ", server_translate(question$Label, language_code), " &escape&hfill")
   } else if(question$Type == "text" || (question$Type == "comment" && question$Label != "Explain")){
     if(question$Label == ""){
       label <- paste0("\n")
@@ -203,23 +203,6 @@ composeQuestions <- function(question, answers = answers, language_code = NULL){
   
   body <- gsub("&Label", label, body)
   body <- gsub("&Answer", answer, body)
-  # 
-  # 
-  # # different types of output
-  # if( !(question$Type %in% c("comment", "text")) ){ # a numbered list with answer at the right side
-  #   body <- paste0(" ", question$Label, " &escape&hfill ", answer, " \n ")
-  # } else if(question$Type == "comment"){ # a block of quote
-  #   
-  #   if(question$Label == "Explain"){ # it it is additional question, do not show the label
-  #     body <- paste0(" \n \n ", answer, " \n ")
-  #   } else{ # if it is a comment, show a the label
-  #     body <- paste0(" \n \n **", question$Label, "** ", " \n \n ", answer, " \n ")
-  #   }
-  # } else if(question$Type == "text"){ # if it's not a question, just print the text in bold
-  #   body <- paste0(" **", question$Label, "** ", " \n")
-  # } else {
-  #   body <- ""
-  # }
 
   return(body)
 }

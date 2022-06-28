@@ -34,7 +34,7 @@ customField <- function(ind, id = NULL, answers = NULL){
     # the guidance text can itself be conditional
     if(is.null(ind$Depends)){
       fluidRow(column(1),
-               column(10, br(), strong(translateLabel(ind$Label))),
+               column(10, br(), strong(ind$Label)),
                column(1))
     } else{
       # Add module id
@@ -42,7 +42,7 @@ customField <- function(ind, id = NULL, answers = NULL){
       
       conditionalPanel(condition = depends,
                        fluidRow(column(1), 
-                                column(10, br(), strong(translateLabel(ind$Label))),
+                                column(10, br(), strong(ind$Label)),
                                 column(1))
                        )
     }
@@ -150,7 +150,7 @@ getItemList <- function(sectionsList, all = TRUE){
 }
 
 
-translateLabel <- function(label) {return(label)}
+# translateLabel <- function(label) {return(label)}
 
 ## Translatable widgets ----
 #' @description This function hard codes html for shinyWidgets::pickerInput with translatable options
