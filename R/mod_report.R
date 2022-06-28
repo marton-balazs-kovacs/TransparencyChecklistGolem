@@ -81,7 +81,7 @@ mod_report_ui <- function(id){
 #' report Server Functions
 #'
 #' @noRd 
-mod_report_server <- function(id, checklist, answers){
+mod_report_server <- function(id, checklist, answers, language_code){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
@@ -208,7 +208,9 @@ mod_report_server <- function(id, checklist, answers){
         sectionsList = checklist$sectionsList,
         headList = checklist$headList,
         answerList = checklist$answerList,
-        save_as = input$save_as)
+        save_as = input$save_as,
+        language_code = isolate(language_code())
+        )
     })
 
     # render Rmd file in show code modal panel
@@ -229,10 +231,11 @@ mod_report_server <- function(id, checklist, answers){
       showModal(generateCode())
     })
     
-    # render previews
+    # Render previews
     # TODO: add shinycssloaders::withSpinner
     generatePreview <- function(failed = FALSE) {
-      RmdPath <- file.path(tempdir(), "report.Rmd")
+      tmp <- tempdir()
+      RmdPath <- file.path(tmp, "report.Rmd")
       writeLines(RmdFile(), con = RmdPath)
       
       if(input$save_as %in% c("word", "rtf")){
@@ -243,12 +246,13 @@ mod_report_server <- function(id, checklist, answers){
           easyClose = TRUE
         )
       } else{
-        save_as <- ifelse(input$save_as == "word", "docx", input$save_as)
-        out_file <- paste0("preview.", save_as)
+        # save_as <- ifelse(input$save_as == "word", "docx", input$save_as)
+        out_file <- paste0("preview.", input$save_as)
         
-        rmarkdown::render(RmdPath, output_file = out_file, output_dir = "www/doc",
+        rmarkdown::render(RmdPath, output_file = out_file, output_dir = app_sys("app/www/doc"),
                           envir = new.env(parent = globalenv()))
-        src_file <- file.path("doc", out_file)
+        src_file <- file.path("www/doc", out_file)
+print(src_file)
         modalDialog(
           tags$iframe(style = "height:600px; width:100%", src = src_file)
         )
@@ -282,7 +286,8 @@ mod_report_server <- function(id, checklist, answers){
           sectionsList = checklist$sectionsList,
           headList = checklist$headList,
           answerList = checklist$answerList,
-          save_as = input$save_as
+          save_as = input$save_as,
+          language_code = language_code()
           )
 
         # print the Rmd document in the console (for debugging)

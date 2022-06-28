@@ -15,11 +15,11 @@ app_server <- function( input, output, session ) {
   header_answers <- mod_header_server("header", checklist = checklist)
   
   # Languages
-  mod_language_server("language")
+  language_code <- mod_language_server("language")
   
   # Intro
   mod_intro_server("intro")
   
   # Generate report
-  mod_report_server("report", checklist = checklist, answers = reactive({c(header_answers(), section_answers())}))
+  mod_report_server("report", checklist = checklist, answers = reactive({c(header_answers(), section_answers())}), language_code = language_code)
 }

@@ -1,17 +1,17 @@
 ## functions to generate the rmd file--
-composeRmd <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, save_as = "pdf"){
+composeRmd <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL, save_as = "pdf"){
   # returns a string
 
   switch (save_as,
-    "pdf" = composePDF(answers = answers, sectionsList = sectionsList, headList = headList),
-    "html" = composeHTML(answers = answers, sectionsList = sectionsList, headList = headList),
-    "word" = composeDOC(answers = answers, sectionsList = sectionsList, headList = headList),
-    "rtf" = composeRTF(answers = answers, sectionsList = sectionsList, headList = headList)
+    "pdf" = composePDF(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code),
+    "html" = composeHTML(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code),
+    "word" = composeDOC(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code),
+    "rtf" = composeRTF(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code)
   )
 }
 
-composeHTML <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL){
-  rmd <- composePDF(answers = answers, sectionsList = sectionsList, headList = headList)
+composeHTML <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL){
+  rmd <- composePDF(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code)
   rmd <- gsub("pdf_document", "html_document", rmd)
   
   
@@ -23,8 +23,8 @@ composeHTML <- function(answers = NULL, sectionsList = NULL, headList = NULL, an
   return(rmd)
 }
 
-composeDOC <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL){
-  rmd <- composePDF(answers = answers, sectionsList = sectionsList, headList = headList)
+composeDOC <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL){
+  rmd <- composePDF(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code)
   rmd <- gsub("pdf_document", "word_document", rmd)
   
   rmd <- gsub("\\newpage", "***", rmd, fixed = TRUE) # change pagebreak to line separation
@@ -34,8 +34,8 @@ composeDOC <- function(answers = NULL, sectionsList = NULL, headList = NULL, ans
   return(rmd)
 }
 
-composeRTF <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL){
-  rmd <- composePDF(answers = answers, sectionsList = sectionsList, headList = headList)
+composeRTF <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL){
+  rmd <- composePDF(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code)
   rmd <- gsub("pdf_document", "rtf_document", rmd)
   
   rmd <- gsub("\\newpage", "***", rmd, fixed = TRUE) # change pagebreak to line separation
@@ -47,7 +47,7 @@ composeRTF <- function(answers = NULL, sectionsList = NULL, headList = NULL, ans
 
 
 ## functions to generate the rmd file--
-composePDF <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL){
+composePDF <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL){
   # returns a string
   
   # First, we create the YAML header of the rmd file (be carefull about indentation, can automatically generate another header which screws everything)
@@ -84,28 +84,28 @@ lang: &languageCode
   headYaml <- gsub("&correspondingEmail", answers$correspondingEmail,                          headYaml)
   headYaml <- gsub("&linkToRepository",   answers$linkToRepository,                            headYaml)
   headYaml <- gsub("&date",               date,                                                headYaml)
-  headYaml <- gsub("&languageCode",       "ADD LANGUAGE HERE LATER",                   headYaml)
-  headYaml <- gsub("&subTitle",           "Transparency Report 1.0 (full, 36 items)",  headYaml)
-  headYaml <- gsub("&corrAuthorsLabel",   "Corresponding author's email address",      headYaml)
-  headYaml <- gsub("&linkToRepoLabel",    "Link to Project Repository",                headYaml)
+  headYaml <- gsub("&languageCode",       language_code,                   headYaml)
+  headYaml <- gsub("&subTitle",           server_translate("Transparency Report 1.0 (full, 36 items)", language_code),  headYaml)
+  headYaml <- gsub("&corrAuthorsLabel",   server_translate("Corresponding author's email address", language_code),      headYaml)
+  headYaml <- gsub("&linkToRepoLabel",    server_translate("Link to Project Repository", language_code),                headYaml)
   
   # fill in answers with "not answered" - important for generating the files
   bundleQuestions <- getItemList(sectionsList)
   not.answered <- !bundleQuestions %in% names(answers)
-  notAnsweredLabel <- "Not answered"
+  notAnsweredLabel <- server_translate("Not answered", language_code)
   answers[bundleQuestions[not.answered]] <- notAnsweredLabel
   
   # We create sections of the rmd file
-  sections <- sapply(sectionsList, composeSections, answers = answers)
+  sections <- sapply(sectionsList, composeSections, answers = answers, language_code = language_code)
   
-  references <- renderReferences()
+  references <- renderReferences(language_code = language_code)
   # combine everything together
   rmd <- paste(c(headYaml, sections, references), collapse = "\n")
   
   rmd
 }
 
-composeSections <- function(section, answers = NULL){
+composeSections <- function(section, answers = NULL, language_code = NULL){
   # Creating a section
   # \\section{&SectionName}
   # First, we sketch the outline of the section
@@ -123,14 +123,14 @@ composeSections <- function(section, answers = NULL){
 "
 
   # Generate the individual questions and their answers
-  questions <- sapply(section$Questions, composeQuestions, answers = answers)
+  questions <- sapply(section$Questions, composeQuestions, answers = answers, language_code = language_code)
   
   # Fill in the section Name, the text, and the generated questions
-  body <- gsub("&SectionName", section$Name, body)
+  body <- gsub("&SectionName", server_translate(section$Name, language_code), body)
   if(is.null(section$Label) || section$Label == ""){
     body <- gsub("\\*\\*&SectionLabel\\*\\*", "", body)
   } else{
-    body <- gsub("&SectionLabel", section$Label, body)
+    body <- gsub("&SectionLabel", server_translate(section$Label, language_code), body)
   }
   body <- gsub("&Questions", paste(questions, collapse = " \n"), body)
   
@@ -140,7 +140,7 @@ composeSections <- function(section, answers = NULL){
   body
 }
 
-composeQuestions <- function(question, answers = answers){
+composeQuestions <- function(question, answers = answers, language_code = NULL){
   # This function takes a question (from the .json file), checks whether it is supposed to be shown
   # (based on the answers and the conditional statements from .json)
   # If it is supposed to be shown, the question and its answer is printed
@@ -172,9 +172,9 @@ composeQuestions <- function(question, answers = answers){
   
   # make answers bold, but if it is a comment, show it as a quote:
   if( !(question$Type %in% c("comment", "text"))){
-    answer <- paste0(" &escape&textbf{", answers[[question$Name]], "} ")
+    answer <- paste0(" &escape&textbf{", server_translate(answers[[question$Name]], language_code), "} ")
   } else if(question$Type == "comment"){
-    answer <- ifelse(answers[[question$Name]] == "", "No comments.", answers[[question$Name]]) # If the comment box is empty
+    answer <- ifelse(answers[[question$Name]] == "", server_translate("No comments.", language_code), answers[[question$Name]]) # If the comment box is empty
     answer <- paste0("\n\n> ", answer)
   } else{
     answer <- ""
@@ -195,7 +195,7 @@ composeQuestions <- function(question, answers = answers){
     if(question$Label == ""){
       label <- paste0("\n")
     } else{
-      label <- paste0("**", question$Label, "**")
+      label <- paste0("**", server_translate(question$Label, language_code), "**")
     }
   } else{
     label <- ""
@@ -224,12 +224,12 @@ composeQuestions <- function(question, answers = answers){
   return(body)
 }
 
-renderReferences <- function(){
+renderReferences <- function(language_code = NULL){
 out <- "
 ## &Refs
  
 Aczel, B., Szaszi, B., Sarafoglou, A. Kekecs, Z., Kucharský, Š., Benjamin, D., ... & Wagenmakers, E.-J. (2019). A consensus-based transparency checklist. *Nature Human Behaviour*, 1--3. doi:10.1038/s41562-019-0772-6
 "
 
-  gsub("&Refs", "References", out)
+  gsub("&Refs", server_translate("References", language_code), out)
 }

@@ -24,7 +24,7 @@ usethis::use_package("shinyanimate")
 usethis::use_package("shinythemes")
 usethis::use_package("shinycssloaders")
 usethis::use_package("bsplus")
-usethis::use_package("jsonlite")
+usethis::use_package("rjson")
 usethis::use_package("RCurl") # for checking whether url.exists
 usethis::use_package("digest")
 usethis::use_package("knitr")

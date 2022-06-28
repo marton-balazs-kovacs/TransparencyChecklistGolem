@@ -32,6 +32,9 @@ mod_language_server <- function(id){
       # Initiate language change on the whole app
       localize("html")
     }, ignoreInit = TRUE)
+    
+    # Return the language code from the module
+    return(reactive(input$language))
   })
 }
     
