@@ -20,12 +20,20 @@ with_i18n <- function(
   if (class(tag)[1] == "character") {
     tag <- htmltools::tags$span(tag)
   }
+  
   # Guess and use the character string in tag as i18n if no i18n is provided
   if (is.null(i18n)) {
     i18n <- purrr::detect(tag$children, is.character)
     # Check for failed guess
     if (is.null(i18n)) stop("Please provide a key as a string for the translation in the i18n parameter!")
   }
+  
+  # Remove semicolon from the i18n code automatically
+  # Not a generalized solution but an easy DIV for our case
+  if (stringr::str_detect(i18n, ";")) {
+    i18n <- stringr::str_remove_all(i18n, ";")
+  }
+  
   # Append translator data attribute
   htmltools::tagAppendAttributes(
     tag,

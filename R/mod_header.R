@@ -58,61 +58,46 @@ mod_header_server <- function(id, checklist){
       )
     })
     
+    # TODO: shinyFeedback does not show ok icon for email and link, feedback text cannot be translated with with_i18n 
     
     # validate e-mail
-    # For some reason not working
     observeEvent(input$correspondingEmail, {
-      if (input$correspondingEmail == "@" || input$correspondingEmail == ""){
-        shinyFeedback::feedback(
-          inputId   = "correspondingEmail",
-          show      = TRUE,
-          text      = " ",
-          color     = "black",
-          icon      = NULL
-        )
-      } else if (isValidEmail(input$correspondingEmail)){
+      email_validation <- isValidEmail(input$correspondingEmail)
+      
         shinyFeedback::feedbackSuccess(
           inputId   = "correspondingEmail",
-          show      = TRUE,
-          text      = " ",
-          color     = "black"
+          show      = email_validation == TRUE && input$correspondingEmail != "",
+          text      = NULL,
+          color     = "black",
         )
-      } else {
+        
+        # "Provided email appears invalid."
         shinyFeedback::feedbackWarning(
           inputId   = "correspondingEmail",
-          show      = TRUE,
-          text      = "Provided email appears invalid.",
+          show      = email_validation == FALSE && input$correspondingEmail != "",
+          text      = NULL,
           color     = "black"
         )
-      }
     })
-    
+
     # validate link
-    # For some reason not working
     observeEvent(input$linkToRepository, {
-      if (input$linkToRepository == ""){
-        shinyFeedback::feedback(
-          inputId   = "linkToRepository",
-          show      = TRUE,
-          text      = " ",
-          color     = "black",
-          icon      = NULL
-        )
-      } else if (RCurl::url.exists(input$linkToRepository)){
+      link_valid <- RCurl::url.exists(input$linkToRepository)
+
         shinyFeedback::feedbackSuccess(
           inputId   = "linkToRepository",
-          show      = TRUE,
+          show      = link_valid == TRUE && input$linkToRepository != "",
           text      = " ",
           color     = "black"
         )
-      } else {
+        
+        # "The link cannot be accessed."
         shinyFeedback::feedbackWarning(
           inputId   = "linkToRepository",
-          show      = TRUE,
-          text      = "The link cannot be accessed.",
+          show      = link_valid == FALSE && input$linkToRepository != "",
+          text      = NULL,
           color     = "black"
         )
-      }
     })
     
     # stores the answers in a list

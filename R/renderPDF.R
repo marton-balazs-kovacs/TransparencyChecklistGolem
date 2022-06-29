@@ -77,7 +77,7 @@ lang: &languageCode
   
   # and fill the header with information taken from the question in the head
   date <- format(Sys.time(), '%d/%m/%Y')
-  answers$studyTitle <- ifelse(answers$studyTitle == "", "Untitled", answers$studyTitle)
+  answers$studyTitle <- ifelse(answers$studyTitle == "", server_translate("Untitled", language_code), answers$studyTitle)
 
   headYaml <- gsub("&studyTitle",         answers$studyTitle,                                  headYaml)
   headYaml <- gsub("&authorNames",        answers$authorNames,                                 headYaml)
@@ -169,10 +169,17 @@ composeQuestions <- function(question, answers = answers, language_code = NULL){
   if(question$Label == "Explain") {
     question$Type <- "comment"
   }
-  
+  print(question$Name)
   # make answers bold, but if it is a comment, show it as a quote
   if( !(question$Type %in% c("comment", "text"))){
-    answer <- paste0(" &escape&textbf{", server_translate(answers[[question$Name]], language_code), "} ")
+    # If the response is NA we do not translate it
+    resp <- ifelse(
+      answers[[question$Name]] == "NA",
+      answers[[question$Name]],
+      server_translate(answers[[question$Name]], language_code)
+    )
+    
+    answer <- paste0(" &escape&textbf{", resp, "} ")
   } else if(question$Type == "comment"){
     answer <- ifelse(answers[[question$Name]] == "", server_translate("No comments.", language_code), answers[[question$Name]]) # If the comment box is empty
     answer <- paste0("\n\n> ", answer)

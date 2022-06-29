@@ -48,17 +48,19 @@ mod_report_ui <- function(id){
           ),
         br(),
         br(),
-        downloadButton(
-          NS(id, 'report'),
-          'Download',
-          class = "downbutt") |> with_i18n("Download"),
+        div(
+          id = "download-btn-div",
+          # Show tooltip which says that the download is not ready
+          title = "A report can be downloaded after all questions in each section have been answered.",
+          # Download btn
+          downloadButton(
+            NS(id, 'report'),
+            'Download',
+            class = "downbutt"
+            ) |> with_i18n("Download")
+        ) |> with_i18n("A report can be downloaded after all questions in each section have been answered.", attribute = "title"),
         icon = icon("file-alt"),
         up = TRUE,
-        # tooltip = shinyWidgets::tooltipOptions(
-        #   title = "Click here to create and download report",
-        #   placement = "left",
-        #   html = TRUE
-        #   ),
         style = "unite",
         label = with_i18n("Generate Report", NULL),
         size = "lg",
@@ -74,7 +76,7 @@ mod_report_ui <- function(id){
       width = "auto",
       style = "transform: translate(-50%, +0%); z-index: 1000;"
       # Translate the tooltip
-      ) |> with_i18n("Click here to create and download report", attribute = "title")
+      ) |> with_i18n("Click here to create and download report", attribute = "title"),
   )
 }
     
@@ -87,6 +89,7 @@ mod_report_server <- function(id, checklist, answers, language_code){
     
     # checks which sections are complete
     whichComplete <- reactive({
+      # Currently the headers do not have to be filled out in order to download a checklist
       isComplete(
         answers = answers(),
         sectionsList = checklist$sectionsList,
@@ -107,6 +110,7 @@ mod_report_server <- function(id, checklist, answers, language_code){
         shinyjs::enable("report")
         shinyjs::enable("showcode")
         shinyjs::enable("preview")
+        golem::invoke_js("remove_tooltip", "#download-btn-div")
         # and start animation every 4 sec
         invalidateLater(4000, session)
         shinyanimate::startAnim(session, "generatereport", type = "bounce")
@@ -114,48 +118,22 @@ mod_report_server <- function(id, checklist, answers, language_code){
         shinyjs::disable("report")
         shinyjs::disable("showcode")
         shinyjs::disable("preview")
+        golem::invoke_js("add_tooltip",
+                         list(
+                           where = "#download-btn-div",
+                           message = "A report can be downloaded after all questions in each section have been answered."))
       }
     })
-
-    # create a tooltip for the Download button
-    # output$reportTooltip <- renderUI({
-    #   tags$script(
-    #     sprintf(
-    #       "$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('report', 'tooltip', {'placement': 'right', 'trigger': 'manual', 'title': '%s'})}, 500)});",
-    #       inAppTexts()$reportDownloadableLabel
-    #     )
-    #   )
-    # })
-    
-    # whenever the input is not complete, show the tooltip for explanation for the download button
-    # output$trigger <- renderUI({
-    #   if(isDownloadable()){
-    #     tags$script("$('#report').tooltip('hide');")
-    #   } else{
-    #     tags$script("$('#report').tooltip('show');")
-    #   }
-    # 
-    # })
-
-    # # Tooltip for the dropdown
-    # output$generateReportTooltip <- renderUI({
-    #   tags$script(
-    #     sprintf(
-    #       "$('#generatereport').tooltip({ placement: 'left', title: '%s', html: false });",
-    #       inAppTexts()$clickToDownloadLabel
-    #     )
-    #   )
-    # })
 
     # observeEvent(input$generatereport, {
     #   sectionId <- sapply(sectionsList, function(section) section$Value)
     # 
-    #   #if(!isDownloadable()){
+    #   if(!isDownloadable()){
     #   for(section in sectionId){
-    #     # output[[paste0("icon_", section)]] <- renderText({"table"})
+    #     output[[paste0("icon_", section)]] <- renderText({"table"})
     #   }
     #   #}
-    # })
+    # # })
     
     # Toggle color of checker icons for questions
     observeEvent(input$generatereport, {

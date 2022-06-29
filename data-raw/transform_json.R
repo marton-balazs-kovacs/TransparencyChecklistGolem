@@ -6,7 +6,6 @@ library(purrr)
 library(stringr)
 library(tibble)
 library(rlang)
-library(jsonlite)
 
 translations <- rjson::fromJSON(file = "./inst/app/www/translations.json")
 language_codes <- rjson::fromJSON(file = "./inst/app/www/language_codes.json")
@@ -27,6 +26,20 @@ translations <- purrr::flatten(translations)
 
 i18n_codes <- purrr::map(translations, "English")
 i18n_codes
+
+# semi-colon in the key breaks i18n, we should replace those keys with a version without the semi-colon
+# it is important to remember to replace these keys in the app UI as well
+# since the keys are automatically generated I will take them out in the with_i18n function
+special_keys <- i18n_codes %>% 
+  keep(., .p = stringr::str_detect(., ";"))
+special_keys
+
+i18n_codes <-
+  i18n_codes %>% 
+  map_if(
+    .p = stringr::str_detect(., ";"),
+     ~ stringr::str_remove_all(., ";")
+  )
 
 transpose_translations <- 
   purrr::transpose(translations) %>% 

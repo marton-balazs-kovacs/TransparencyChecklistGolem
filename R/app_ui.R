@@ -21,11 +21,11 @@ app_ui <- function(request) {
       # Application title
       headerPanel(
         column(12,
-               "CREATING TRANSPARENCY CHECKLIST 1.0 (full, 36 items)",
+               with_i18n("CREATING TRANSPARENCY CHECKLIST 1.0 (full, 36 items)", NULL),
                align = "center"
                ),
         windowTitle = "Transparency Checklist 1.0"
-        ) |> with_i18n("CREATING TRANSPARENCY CHECKLIST 1.0 (full, 36 items)", selector = "h1"),
+        ),
       fluidRow(
         column(1),
         column(10,
@@ -63,13 +63,6 @@ app_ui <- function(request) {
       br(),
       # Report menu (downloading)
       mod_report_ui("report"),
-      # Show tooltip which says that the download is not ready
-      # shinyBS::bsTooltip(id = "report",
-      #                    title = "A report can be downloaded after all questions in each section have been answered.",
-      #                    # Please, respond to all displayed items to download the pdf report (comments are optional).
-      #                    trigger = "manual",
-      #                    placement = "right"),
-      # uiOutput("trigger"), # this trigger displays or hides the explaining tooltip
       br(),
       br(),
       # info modal
@@ -109,7 +102,7 @@ golem_add_external_resources <- function(){
     shinyFeedback::useShinyFeedback(), # enabling/disabling feedback from shinyFeedback
     shinyanimate::withAnim(), # enable animations from shinyanimate
     # # Add custom css stylesheet
-    tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css")
+    tags$link(rel = "stylesheet", type = "text/css", href = "www/custom.css")
     # tags$script(src = "toggleChecker.js"),
     # tags$script(src = "toggleCheckerColor.js"),
     # tags$script(src = "toggleSectionIcon.js")
