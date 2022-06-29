@@ -14,7 +14,7 @@ mod_language_ui <- function(id){
   
   # Add select input
   tagList(
-      selectInput(ns("language"), "Select Language", language_list, width = "auto") |> 
+      selectInput(NS(id, "language"), "Select Language", language_list, width = "auto") |> 
       with_i18n("Select Language", selector = "label")
   )
 }
@@ -28,10 +28,16 @@ mod_language_server <- function(id){
 
     # Change language
     observeEvent(input$language, {
+      # get_language(ns("current_lang"))
       change_language(input$language)
       # Initiate language change on the whole app
       localize("html")
     }, ignoreInit = TRUE)
+    
+    # # Link language button in main app and in the about window
+    # observe({
+    #   updateSelectInput(session, "language", selected = language_update())
+    # })
     
     # Return the language code from the module
     return(reactive(input$language))

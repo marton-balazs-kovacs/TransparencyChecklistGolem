@@ -25,18 +25,16 @@ mod_intro_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
-    # Enable language selection in the intro modal
-    mod_language_server("language")
-    
     # Content of the intro modal
     intro_modal <- function() {
       modalDialog(
-        fluidRow(
-          column(8),
-          column(4,
-                 mod_language_ui(NS(id, "language"))
-                 )
-          ),
+        # fluidRow(
+        #   column(8),
+        #   column(4,
+        #          selectInput(NS(id, "intro_language"), "Select Language", language_list, width = "auto") |> 
+        #            with_i18n("Select Language", selector = "label")
+        #          )
+        #   ),
         withTags({
           div(id = "intro-modal-content",
             h3("What is the Transparency Checklist?") |> with_i18n(NULL),
@@ -58,8 +56,8 @@ mod_intro_server <- function(id){
               i("Nature Human Behaviour, "), "1--3.",
               a("doi:10.1038/s41562-019-0772-6", href = "https://doi.org/10.1038/s41562-019-0772-6", target = "_blank")),
             hr(),
-            p("Feedback and recommendations for an update of the checklist can be provided here:",
-              a("https://forms.gle/raN7q1ucpov5sX316", href = "https://forms.gle/raN7q1ucpov5sX316", target = "_blank")) |> with_i18n(NULL),
+            p(with_i18n("Feedback and recommendations for an update of the checklist can be provided here:", NULL),
+              a("https://forms.gle/raN7q1ucpov5sX316", href = "https://forms.gle/raN7q1ucpov5sX316", target = "_blank")),
             br(),
             a(
               img(src = "www/GitHub-Mark-32px.png"),
@@ -68,7 +66,8 @@ mod_intro_server <- function(id){
             )
           )
         }),
-        easyClose = TRUE
+        easyClose = TRUE,
+        footer = NULL
       )
     }
     
@@ -77,6 +76,14 @@ mod_intro_server <- function(id){
       showModal(intro_modal())
       localize("#intro-modal-content")
     }, ignoreNULL = FALSE, ignoreInit = FALSE)
+    
+    # # Link language button in main app and in the about window
+    # observe({
+    #   updateSelectInput(session, "intro_language", selected = language_code())
+    # })
+    # 
+    # # Return the language set in the intro modal so the other language select input can be updated
+    # return(reactive(input$intro_language))
   })
 }
     
