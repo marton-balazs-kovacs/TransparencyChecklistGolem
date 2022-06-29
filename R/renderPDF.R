@@ -169,7 +169,7 @@ composeQuestions <- function(question, answers = answers, language_code = NULL){
   if(question$Label == "Explain") {
     question$Type <- "comment"
   }
-  print(question$Name)
+ 
   # make answers bold, but if it is a comment, show it as a quote
   if( !(question$Type %in% c("comment", "text"))){
     # If the response is NA we do not translate it

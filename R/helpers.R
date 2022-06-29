@@ -132,7 +132,7 @@ switchButtons <- function(ind, id = NULL, answers = NULL){
 }
 
 
-getItemList <- function(sectionsList, all = TRUE){
+getItemList <- function(sectionsList, all = TRUE, id = NULL){
   # Get list of question ids
   items <- unlist(
     sapply(sectionsList,
@@ -141,6 +141,9 @@ getItemList <- function(sectionsList, all = TRUE){
              }
            )
     )
+  
+  # Add module id
+  items <- shiny::NS(id, items)
   
   if(all){
     return(items)

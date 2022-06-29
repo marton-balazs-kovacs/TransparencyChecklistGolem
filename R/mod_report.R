@@ -124,35 +124,32 @@ mod_report_server <- function(id, checklist, answers, language_code){
                            message = "A report can be downloaded after all questions in each section have been answered."))
       }
     })
-
-    # observeEvent(input$generatereport, {
-    #   sectionId <- sapply(sectionsList, function(section) section$Value)
-    # 
-    #   if(!isDownloadable()){
-    #   for(section in sectionId){
-    #     output[[paste0("icon_", section)]] <- renderText({"table"})
-    #   }
-    #   #}
-    # # })
     
     # Toggle color of checker icons for questions
     observeEvent(input$generatereport, {
+      # Get ids of items from internal data
       items <- getItemList(checklist$sectionsList, all = FALSE)
+      # Get responses
       ans   <- isolate(answers())
       
       for(item in items) {
         if(ans[item] == "" || is.null(ans[[item]])) {
-          shinyanimate::startAnim(session, paste0(item, "Checker"), type = "shake")
+          shinyanimate::startAnim(
+            session,
+            # Add namespace to item ids
+            paste0("sections-", item, "Checker"),
+            type = "shake"
+            )
         }
         
         session$sendCustomMessage(
           type = "toggleCheckerColor",
           message = list(
-            # namespacing of a different module have to be used
+            # namespacing of a different module
             # think of an alternative solution later
             id = paste0("sections-", item, "Checker"),
             val = input[[item]],
-            # namespacing of a different module have to be used
+            # namespacing of a different module
             divId = paste0("sections-", "div", item, "Checker"))
         )
       }
@@ -192,15 +189,15 @@ mod_report_server <- function(id, checklist, answers, language_code){
     })
 
     # render Rmd file in show code modal panel
-    # TODO: add shinycssloaders::withSpinner
     output$code <- renderText({
       RmdFile()
     })
     
     generateCode <- function() {
       modalDialog(
-        verbatimTextOutput(ns("code")),
-        easyClose = TRUE
+        shinycssloaders::withSpinner(verbatimTextOutput(ns("code"))),
+        easyClose = TRUE,
+        footer = NULL
       )
     }
     
@@ -210,7 +207,6 @@ mod_report_server <- function(id, checklist, answers, language_code){
     })
     
     # Render previews
-    # TODO: add shinycssloaders::withSpinner
     generatePreview <- function(failed = FALSE) {
       tmp <- tempdir()
       RmdPath <- file.path(tmp, "report.Rmd")
@@ -230,9 +226,11 @@ mod_report_server <- function(id, checklist, answers, language_code){
         rmarkdown::render(RmdPath, output_file = out_file, output_dir = app_sys("app/www/doc"),
                           envir = new.env(parent = globalenv()))
         src_file <- file.path("www/doc", out_file)
-print(src_file)
+
         modalDialog(
-          tags$iframe(style = "height:600px; width:100%", src = src_file)
+          shinycssloaders::withSpinner(tags$iframe(style = "height:600px; width:100%", src = src_file)),
+          easyClose = TRUE,
+          footer = NULL
         )
       }
     }

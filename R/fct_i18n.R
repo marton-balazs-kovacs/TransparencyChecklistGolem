@@ -130,6 +130,12 @@ server_translate <- function(i18n, language_code = NULL) {
   # Filter by language code
   lang <- purrr::pluck(local, language_code, "translation")
   
+  # Remove semicolon from the i18n code automatically
+  # Not a generalized solution but an easy DIV for our case
+  if (stringr::str_detect(i18n, ";")) {
+    i18n <- stringr::str_remove_all(i18n, ";")
+  }
+  
   # Get translation by key
   translation <- purrr::pluck(lang, i18n)
   

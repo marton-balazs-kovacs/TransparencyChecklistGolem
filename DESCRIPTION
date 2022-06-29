@@ -17,6 +17,8 @@ Imports:
     rjson,
     rmarkdown,
     shiny (>= 1.7.1),
+    shinyanimate,
+    shinycssloaders,
     shinythemes,
     stringr
 Encoding: UTF-8
