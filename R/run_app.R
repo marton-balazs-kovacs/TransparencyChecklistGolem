@@ -15,9 +15,8 @@ run_app <- function(
 ) {
   
   # Load the .json, which defines the structure of the application
-  # TODO: change short checklist json accordingly
   if (short_checklist) {
-    checklist <- NULL
+    checklist <- TransparencyChecklistGolem:::short
   } else {
     checklist <- TransparencyChecklistGolem:::long
   }
@@ -32,6 +31,7 @@ run_app <- function(
       uiPattern = uiPattern
     ), 
     golem_opts = list(
+      short_checklist = short_checklist,
       checklist = checklist
     )
   )

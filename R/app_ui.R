@@ -8,6 +8,20 @@ app_ui <- function(request) {
   # Get UI elements
   checklist <- golem::get_golem_options("checklist")
   
+  # Is this the short checklist?
+  short_checklist <- golem::get_golem_options("short_checklist")
+  
+  # Set UI elements dependent on which checklist do we use
+  if (short_checklist) {
+    app_title <- "CREATING TRANSPARENCY CHECKLIST 1.0 (short, 12 items)"
+    other_checklist <- "I prefer to fill out the full (36-item) checklist."
+    link_other_checklist <- "http://www.shinyapps.org/apps/TransparencyChecklist/"
+  } else {
+    app_title <- "CREATING TRANSPARENCY CHECKLIST 1.0 (full, 36 items)"
+    other_checklist <- "I prefer to fill out the short (12-item) checklist."
+    link_other_checklist <- "http://www.shinyapps.org/apps/ShortTransparencyChecklist/"
+  }
+  
   # UI
   tagList(
     actionButton("browser", "browser"),
@@ -21,7 +35,7 @@ app_ui <- function(request) {
       # Application title
       headerPanel(
         column(12,
-               with_i18n("CREATING TRANSPARENCY CHECKLIST 1.0 (full, 36 items)", NULL),
+               with_i18n(app_title, NULL),
                align = "center"
                ),
         windowTitle = "Transparency Checklist 1.0"
@@ -31,11 +45,11 @@ app_ui <- function(request) {
         column(10,
                with_i18n(
                  tags$a(
-                   "I prefer to fill out the short (12-item) checklist.",
-                   href = "http://www.shinyapps.org/apps/ShortTransparencyChecklist/",
+                   other_checklist,
+                   href = link_other_checklist,
                    target = "_blank"
                    ),
-                 "I prefer to fill out the short (12-item) checklist."
+                 other_checklist
                  ),
                align = "center"
                ),
@@ -101,11 +115,6 @@ golem_add_external_resources <- function(){
     shinyjs::useShinyjs(), # this is for enabling/disabling buttons from shinyjs
     shinyFeedback::useShinyFeedback(), # enabling/disabling feedback from shinyFeedback
     shinyanimate::withAnim(), # enable animations from shinyanimate
-    # # Add custom css stylesheet
-    tags$link(rel = "stylesheet", type = "text/css", href = "www/custom.css")
-    # tags$script(src = "toggleChecker.js"),
-    # tags$script(src = "toggleCheckerColor.js"),
-    # tags$script(src = "toggleSectionIcon.js")
   )
 }
 
