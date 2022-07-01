@@ -1,6 +1,13 @@
-## Functions which help us to create some structure of the shiny app
-## and defines the buttons which appear horizontal
-
+#' Functions to create the HTML structure of the shiny app dynamically
+#'
+#'These functions, first, read the header and the questions sections content and structure
+#'from the appropriate internal datafile depending on whether a long or short checklist
+#'is being built. Second, they create the HTML DOM tree dynamically when they called. To
+#'save computing power we use them only once on app start.
+#'
+#' @section Warning: The dynamically created HTML element ids should be namespaced
+#'   in order to reach their inputs from the server side of the modules.
+#' 
 renderSection <- function(section, id = NULL, answers = NULL){
   # creates a tab ( can be changed to a fluidrow if we do not want tabs)
   
@@ -150,70 +157,4 @@ getItemList <- function(sectionsList, all = TRUE, id = NULL){
   } else {
     return(items[grep("ind", items)])
   }
-}
-
-
-# translateLabel <- function(label) {return(label)}
-
-## Translatable widgets ----
-#' @description This function hard codes html for shinyWidgets::pickerInput with translatable options
-pickerInputTranslatable <- function(inputId, choices) {
-  options <- list()
-  for(i in seq_along(choices)) {
-    options[[i]] <- tags$option(value = choices[i], names(choices[i])) |> with_i18n(names(choices[i]))
-  }
-  
-  div(
-    class = "form-group shiny-input-container",
-    tags$label(
-      class = "control-label",
-      `for` = inputId
-      ),
-    tags$select(
-      id = inputId,
-      class = "form-control",
-      HTML('<option value="" disabled selected data-i18n="Please select an option">Please select an option</option>'),
-      options
-      )
-    )
-}
-
-#' @description This function hard codes html for shiny::radioButton with translatable options 
-radioButtonTranslatable <- function(inputId, choices) {
-  div(id = inputId, class = "form-group shiny-input-radiogroup shiny-input-container", role = "radiogroup", `aria-labelledby` = sprintf("%s-label", inputId),
-      tags$label(class = "control-label", id = sprintf("%s-label", inputId), `for` = inputId),
-      radioButtonTranslatableOptions(choices, inputId))
-}
-
-radioButtonTranslatableOptions <- function(choices, inputId) {
-  options <- list()
-  for(i in seq_along(choices)) {
-    options[[i]] <- radioButtonTranslatableOption(choices[i], inputId)
-  }
-  
-  div(class = "shiny-options-group", options)
-}
-
-radioButtonTranslatableOption <- function(choice, inputId) {
-  div(class = "radio-inline",
-      tags$input(type = "radio", name = inputId, value = choice),  
-        # |> with_i18n(
-        #   names(choice),
-        #   attribute = "value"
-        #   ),
-      tags$label(
-        names(choice),
-        `for` = names(choice)
-        ) |> 
-        with_i18n(names(choice))
-
-      )
-}
-
-#' @description This function hard codes html for shiny::textArea with translatable options
-textAreaInputTranslatable <- function(inputId, placeholder, rows) {
-  div(class = "form-group shiny-input-container",
-      tags$label(class = "control-label", id = inputId, `for` = inputId),
-      tags$textarea(class = "form-control", id = inputId, placeholder = "bla", rows = rows)
-      )
 }
