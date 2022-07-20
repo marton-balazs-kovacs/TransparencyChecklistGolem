@@ -12,14 +12,19 @@ Imports:
     golem (>= 0.3.1),
     htmltools,
     markdown,
+    pkgload,
     processx,
     purrr,
+    RCurl,
     rjson,
     rmarkdown,
     shiny (>= 1.7.1),
     shinyanimate,
     shinycssloaders,
+    shinyFeedback,
+    shinyjs,
     shinythemes,
+    shinyWidgets,
     stringr
 Encoding: UTF-8
 LazyData: true
