@@ -83,10 +83,10 @@ customButton <- function(ind, id = NULL, answers = NULL){
                               column(1, br(), # adds exclamation circle next to the item
                                      tags$div(
                                        id = shiny::NS(id, paste0("div", ind$Name, "Checker")),
-                                       title = with_i18n("This question needs to be answered.", "This question needs to be answered."),
+                                       title = "This question needs to be answered.",
                                        tags$i(id = shiny::NS(id,  paste0(ind$Name, "Checker")),
                                               class = 'fa fa-exclamation-circle')
-                                       )
+                                       ) |> with_i18n("This question needs to be answered.", attribute = "title")
                                      ),
                               column(1)
                      )

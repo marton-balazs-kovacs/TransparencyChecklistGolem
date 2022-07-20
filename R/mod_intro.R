@@ -13,8 +13,10 @@ mod_intro_ui <- function(id){
     absolutePanel(
       shinyWidgets::actionBttn(inputId = ns("trigger"), label = "About", icon = icon("info-circle")) |> 
         with_i18n("About", attribute = "text"),
-      top = "3%", left = "2%", fixed = TRUE, width = "auto"
-    ),
+      top = "3%", left = "2%",
+      # fixed = TRUE,
+      width = "auto"
+    )
   )
 }
     
@@ -75,7 +77,7 @@ mod_intro_server <- function(id){
     observeEvent(input$trigger, {
       showModal(intro_modal())
       localize("#intro-modal-content")
-    }, ignoreNULL = FALSE, ignoreInit = FALSE)
+    })
     
     # # Link language button in main app and in the about window
     # observe({

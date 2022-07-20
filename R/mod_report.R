@@ -141,14 +141,14 @@ mod_report_server <- function(id, checklist, answers, language_code){
             type = "shake"
             )
         }
-        
+
         session$sendCustomMessage(
           type = "toggleCheckerColor",
           message = list(
             # namespacing of a different module
             # think of an alternative solution later
             id = paste0("sections-", item, "Checker"),
-            val = input[[item]],
+            val = ans[[item]],
             # namespacing of a different module
             divId = paste0("sections-", "div", item, "Checker"))
         )

@@ -84,7 +84,9 @@ app_ui <- function(request) {
       # Select language
       absolutePanel(
         mod_language_ui("language"),
-        top = "3%", right = "2%", fixed = TRUE, width = "10%"
+        top = "3%", right = "2%",
+        # fixed = TRUE,
+        width = "10%"
       )
     )
   )
