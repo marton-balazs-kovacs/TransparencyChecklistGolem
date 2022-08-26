@@ -49,7 +49,7 @@ so:
 
 ``` r
 install.packages("remotes")
-remotes::install_github("")
+remotes::install_github("TransparencyChecklistGolem")
 ```
 
 To run the shiny applications on your computer run the following command

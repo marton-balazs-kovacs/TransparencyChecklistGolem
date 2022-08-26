@@ -15,11 +15,11 @@ app_ui <- function(request) {
   if (short_checklist) {
     app_title <- "CREATING TRANSPARENCY CHECKLIST 1.0 (short, 12 items)"
     other_checklist <- "I prefer to fill out the full (36-item) checklist."
-    link_other_checklist <- "http://www.shinyapps.org/apps/TransparencyChecklist/"
+    link_other_checklist <- "http://shinyapps.org/apps/TransparencyChecklist/"
   } else {
     app_title <- "CREATING TRANSPARENCY CHECKLIST 1.0 (full, 36 items)"
     other_checklist <- "I prefer to fill out the short (12-item) checklist."
-    link_other_checklist <- "http://www.shinyapps.org/apps/ShortTransparencyChecklist/"
+    link_other_checklist <- "http://shinyapps.org/apps/ShortTransparencyChecklist/"
   }
   
   # UI
