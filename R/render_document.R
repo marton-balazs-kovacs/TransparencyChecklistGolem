@@ -50,7 +50,7 @@ composeRTF <- function(answers = NULL, sectionsList = NULL, headList = NULL, ans
 composePDF <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL){
   # returns a string
   
-  # First, we create the YAML header of the rmd file (be carefull about indentation, can automatically generate another header which screws everything)
+  # First, we create the YAML header of the rmd file (be carefully about indentation, can automatically generate another header which screws everything)
   headYaml <- 
 "---
 title: '&studyTitle'
@@ -59,14 +59,18 @@ author: '&authorNames'
 date: '&date'
 header-includes:
   - \\usepackage{ctex}
-  - \\newfontfamily\\arabicfont{Times New Roman}
-  - \\newfontfamily\\cyrillicfont{Times New Roman}
-  - \\newfontfamily\\hebrewfont{Times New Roman}
-  - \\newfontfamily\\greekfont{Times New Roman}
+  - \\setCJKmainfont{Noto Serif CJK JP}
+  - \\usepackage{fontspec}
+  - \\setmainfont{FreeSerif}
+  - \\newfontfamily\\arabicfont{FreeSerif}
+  - \\newfontfamily\\cyrillicfont{FreeSerif}
+  - \\newfontfamily\\hebrewfont{FreeSerif}
+  - \\newfontfamily\\greekfont{FreeSerif}
 output: 
   pdf_document:
     latex_engine: xelatex
 lang: &languageCode
+babel-lang: chinese-simplified
 ---
   
 &corrAuthorsLabel: [&correspondingEmail](&correspondingEmail)
