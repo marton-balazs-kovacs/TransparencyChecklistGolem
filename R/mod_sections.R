@@ -23,17 +23,17 @@ mod_sections_ui <- function(id, checklist){
       column(2, align = "center",
              actionButton(
                ns("previousButton"),
-               "Go to previous section",
-               icon = icon("arrow-circle-left")
-               ) |> with_i18n("Go to previous section")
+               with_i18n("Go to previous section", "Go to previous section"),
+               icon = icon("circle-arrow-left", lib = "font-awesome")
+               )
       ),
       column(4),
       column(2, align = "center",
              actionButton(
                ns("nextButton"),
-               "Go to next section",
-               icon = icon("arrow-circle-right")
-               ) |> with_i18n("Go to next section")
+               with_i18n("Go to next section", "Go to next section"),
+               icon = icon("circle-arrow-right")
+               )
       ),
       column(2)
     )

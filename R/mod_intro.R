@@ -11,8 +11,7 @@ mod_intro_ui <- function(id){
   ns <- NS(id)
   tagList(
     absolutePanel(
-      shinyWidgets::actionBttn(inputId = ns("trigger"), label = "About", icon = icon("info-circle")) |> 
-        with_i18n("About", attribute = "text"),
+      shinyWidgets::actionBttn(inputId = ns("trigger"), label = with_i18n("About", "About"), icon = icon("circle-info")),
       top = "3%", left = "2%",
       # fixed = TRUE,
       width = "auto"

@@ -59,7 +59,7 @@ mod_report_ui <- function(id){
             class = "downbutt"
             ) |> with_i18n("Download")
         ) |> with_i18n("A report can be downloaded after all questions in each section have been answered.", attribute = "title"),
-        icon = icon("file-alt"),
+        icon = icon("file-lines"),
         up = TRUE,
         style = "unite",
         label = with_i18n("Generate Report", NULL),
@@ -208,8 +208,7 @@ mod_report_server <- function(id, checklist, answers, language_code){
     
     # Render previews
     generatePreview <- function(failed = FALSE) {
-      tmp <- tempdir()
-      RmdPath <- file.path(tmp, "report.Rmd")
+      RmdPath <- file.path(tempdir(), "report.Rmd")
       writeLines(RmdFile(), con = RmdPath)
       
       if(input$save_as %in% c("word", "rtf")){

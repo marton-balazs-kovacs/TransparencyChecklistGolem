@@ -13,6 +13,7 @@ composeRmd <- function(answers = NULL, sectionsList = NULL, headList = NULL, ans
 composeHTML <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL){
   rmd <- composePDF(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code)
   rmd <- gsub("pdf_document", "html_document", rmd)
+  rmd <- gsub("latex_engine: xelatex", "default", rmd)
   
   
   rmd <- gsub("\\newpage", "***", rmd, fixed = TRUE) # change pagebreak to line separation
@@ -26,6 +27,7 @@ composeHTML <- function(answers = NULL, sectionsList = NULL, headList = NULL, an
 composeDOC <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL){
   rmd <- composePDF(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code)
   rmd <- gsub("pdf_document", "word_document", rmd)
+  rmd <- gsub("latex_engine: xelatex", "default", rmd)
   
   rmd <- gsub("\\newpage", "***", rmd, fixed = TRUE) # change pagebreak to line separation
   rmd <- gsub("\\hfill  \\textbf{", " **", rmd, fixed = TRUE) # change indentation of answers
@@ -37,6 +39,7 @@ composeDOC <- function(answers = NULL, sectionsList = NULL, headList = NULL, ans
 composeRTF <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL){
   rmd <- composePDF(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code)
   rmd <- gsub("pdf_document", "rtf_document", rmd)
+  rmd <- gsub("latex_engine: xelatex", "default", rmd)
   
   rmd <- gsub("\\newpage", "***", rmd, fixed = TRUE) # change pagebreak to line separation
   rmd <- gsub("\\hfill  \\textbf{", " **", rmd, fixed = TRUE) # change indentation of answers
@@ -59,17 +62,17 @@ author: '&authorNames'
 date: '&date'
 header-includes:
   - \\usepackage{ctex}
-  - \\setCJKmainfont{Noto Serif CJK JP}
+  - \\setCJKmainfont{Noto Serif CJK SC}
   - \\usepackage{fontspec}
   - \\setmainfont{FreeSerif}
   - \\newfontfamily\\arabicfont{FreeSerif}
   - \\newfontfamily\\cyrillicfont{FreeSerif}
   - \\newfontfamily\\hebrewfont{FreeSerif}
   - \\newfontfamily\\greekfont{FreeSerif}
+lang: &languageCode
 output: 
   pdf_document:
     latex_engine: xelatex
-lang: &languageCode
 babel-lang: chinese-simplified
 ---
   
