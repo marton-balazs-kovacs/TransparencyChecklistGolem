@@ -1,100 +1,67 @@
-## functions to generate the rmd file--
+#' Helper functions to generate the RMD file
+#' 
+#' @description 
+#' These functions help to generate the output rmarkdown file containing the filled out
+#' Transparency Checklist as a string without a template on the fly.
+#'
+#' @name render_document
+#' @aliases NULL
+NULL
+
+#' @rdname render_document
 composeRmd <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL, save_as = "pdf"){
-  # returns a string
-
-  switch (save_as,
-    "pdf" = composePDF(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code),
-    "html" = composeHTML(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code),
-    "word" = composeDOC(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code),
-    "rtf" = composeRTF(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code)
-  )
-}
-
-composeHTML <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL){
-  rmd <- composePDF(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code)
-  rmd <- gsub("pdf_document", "html_document", rmd)
-  rmd <- gsub("latex_engine: xelatex", "default", rmd)
-  
-  
-  rmd <- gsub("\\newpage", "***", rmd, fixed = TRUE) # change pagebreak to line separation
-  rmd <- gsub("\\hfill  \\textbf{", " **", rmd, fixed = TRUE) # change indentation of answers
-  rmd <- gsub("}", "**", rmd, fixed = TRUE)
-  
-  
-  return(rmd)
-}
-
-composeDOC <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL){
-  rmd <- composePDF(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code)
-  rmd <- gsub("pdf_document", "word_document", rmd)
-  rmd <- gsub("latex_engine: xelatex", "default", rmd)
-  
-  rmd <- gsub("\\newpage", "***", rmd, fixed = TRUE) # change pagebreak to line separation
-  rmd <- gsub("\\hfill  \\textbf{", " **", rmd, fixed = TRUE) # change indentation of answers
-  rmd <- gsub("}", "**", rmd, fixed = TRUE)
-  
-  return(rmd)
-}
-
-composeRTF <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL){
-  rmd <- composePDF(answers = answers, sectionsList = sectionsList, headList = headList, language_code = language_code)
-  rmd <- gsub("pdf_document", "rtf_document", rmd)
-  rmd <- gsub("latex_engine: xelatex", "default", rmd)
-  
-  rmd <- gsub("\\newpage", "***", rmd, fixed = TRUE) # change pagebreak to line separation
-  rmd <- gsub("\\hfill  \\textbf{", " **", rmd, fixed = TRUE) # change indentation of answers
-  rmd <- gsub("}", "**", rmd, fixed = TRUE)
-  
-  return(rmd)
-}
-
-
-## functions to generate the rmd file--
-composePDF <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL){
   # returns a string
   
   # First, we create the YAML header of the rmd file (be carefully about indentation, can automatically generate another header which screws everything)
-  headYaml <- 
+  headYaml <- stringr::str_glue(
 "---
-title: '&studyTitle'
-subtitle: '&subTitle'
-author: '&authorNames'
-date: '&date'
+title: '{study_title}'
+subtitle: '{sub_title}'
+author: '{author_names}'
+date: '{format(Sys.time(), '%d/%m/%Y')}'
 header-includes:
-  - \\usepackage{ctex}
-  - \\setCJKmainfont{Noto Serif CJK SC}
-  - \\usepackage{fontspec}
-  - \\setmainfont{FreeSerif}
-  - \\newfontfamily\\arabicfont{FreeSerif}
-  - \\newfontfamily\\cyrillicfont{FreeSerif}
-  - \\newfontfamily\\hebrewfont{FreeSerif}
-  - \\newfontfamily\\greekfont{FreeSerif}
-lang: &languageCode
+  - \\usepackage{{ctex}}
+  - \\setCJKmainfont{{Noto Serif CJK SC}}
+  - \\usepackage{{fontspec}}
+  - \\setmainfont{{FreeSerif}}
+  - \\newfontfamily\\arabicfont{{FreeSerif}}
+  - \\newfontfamily\\cyrillicfont{{FreeSerif}}
+  - \\newfontfamily\\hebrewfont{{FreeSerif}}
+  - \\newfontfamily\\greekfont{{FreeSerif}}
+lang: {language_code}
 output: 
-  pdf_document:
-    latex_engine: xelatex
+  {paste0(save_as, '_document')}:
+    {ifelse(save_as == 'pdf', 'latex_engine: xelatex', 'default')}
 babel-lang: chinese-simplified
 ---
-  
-&corrAuthorsLabel: [&correspondingEmail](&correspondingEmail)
-  
-&linkToRepoLabel: [&linkToRepository](&linkToRepository)
-"
 
+{corr_author_label}: [{corresponding_email}]({corresponding_email})
   
+{link_label}: [{link_to_rep}]({link_to_rep})
+",
+save_as = save_as,
+study_title = ifelse(answers$studyTitle == "", server_translate("Untitled", language_code), answers$studyTitle),
+sub_title = server_translate("Transparency Report 1.0 (full, 36 items)", language_code),
+author_names =  answers$authorNames,
+corresponding_email = answers$correspondingEmail,
+link_to_rep = answers$linkToRepository,
+language_code = language_code,
+corr_author_label = server_translate("Corresponding author's email address", language_code),
+link_label = server_translate("Link to Project Repository", language_code)
+)
+
   # and fill the header with information taken from the question in the head
-  date <- format(Sys.time(), '%d/%m/%Y')
-  answers$studyTitle <- ifelse(answers$studyTitle == "", server_translate("Untitled", language_code), answers$studyTitle)
+  # date <- format(Sys.time(), '%d/%m/%Y')
 
-  headYaml <- gsub("&studyTitle",         answers$studyTitle,                                  headYaml)
-  headYaml <- gsub("&authorNames",        answers$authorNames,                                 headYaml)
-  headYaml <- gsub("&correspondingEmail", answers$correspondingEmail,                          headYaml)
-  headYaml <- gsub("&linkToRepository",   answers$linkToRepository,                            headYaml)
-  headYaml <- gsub("&date",               date,                                                headYaml)
-  headYaml <- gsub("&languageCode",       language_code,                   headYaml)
-  headYaml <- gsub("&subTitle",           server_translate("Transparency Report 1.0 (full, 36 items)", language_code),  headYaml)
-  headYaml <- gsub("&corrAuthorsLabel",   server_translate("Corresponding author's email address", language_code),      headYaml)
-  headYaml <- gsub("&linkToRepoLabel",    server_translate("Link to Project Repository", language_code),                headYaml)
+  # headYaml <- gsub("&studyTitle",         answers$studyTitle,                                  headYaml)
+  # headYaml <- gsub("&authorNames",        answers$authorNames,                                 headYaml)
+  # headYaml <- gsub("&correspondingEmail", answers$correspondingEmail,                          headYaml)
+  # headYaml <- gsub("&linkToRepository",   answers$linkToRepository,                            headYaml)
+  # headYaml <- gsub("&date",               date,                                                headYaml)
+  # headYaml <- gsub("&languageCode",       language_code,                   headYaml)
+  # headYaml <- gsub("&subTitle",           server_translate("Transparency Report 1.0 (full, 36 items)", language_code),  headYaml)
+  # headYaml <- gsub("&corrAuthorsLabel",   server_translate("Corresponding author's email address", language_code),      headYaml)
+  # headYaml <- gsub("&linkToRepoLabel",    server_translate("Link to Project Repository", language_code),                headYaml)
   
   # fill in answers with "not answered" - important for generating the files
   bundleQuestions <- getItemList(sectionsList)
@@ -103,7 +70,7 @@ babel-lang: chinese-simplified
   answers[bundleQuestions[not.answered]] <- notAnsweredLabel
   
   # We create sections of the rmd file
-  sections <- sapply(sectionsList, composeSections, answers = answers, language_code = language_code)
+  sections <- sapply(sectionsList, composeSections, answers = answers, language_code = language_code, save_as = save_as)
   
   references <- renderReferences(language_code = language_code)
   # combine everything together
@@ -112,11 +79,12 @@ babel-lang: chinese-simplified
   rmd
 }
 
-composeSections <- function(section, answers = NULL, language_code = NULL){
+#' @rdname render_document
+composeSections <- function(section, answers = NULL, language_code = NULL, save_as){
   # Creating a section
   # \\section{&SectionName}
   # First, we sketch the outline of the section
-  body <- 
+  body <- stringr::str_glue(
 "
 
 ## &SectionName
@@ -126,11 +94,12 @@ composeSections <- function(section, answers = NULL, language_code = NULL){
 
 &Questions
 
-\\newpage
-"
-
+{ifelse(save_as == 'pdf', '\\newpage', '***')}
+",
+save_as = save_as
+)
   # Generate the individual questions and their answers
-  questions <- sapply(section$Questions, composeQuestions, answers = answers, language_code = language_code)
+  questions <- sapply(section$Questions, composeQuestions, answers = answers, language_code = language_code, save_as)
   
   # Fill in the section Name, the text, and the generated questions
   body <- gsub("&SectionName", server_translate(section$Name, language_code), body)
@@ -147,7 +116,8 @@ composeSections <- function(section, answers = NULL, language_code = NULL){
   body
 }
 
-composeQuestions <- function(question, answers = answers, language_code = NULL){
+#' @rdname render_document
+composeQuestions <- function(question, answers = answers, language_code = NULL, save_as){
   # This function takes a question (from the .json file), checks whether it is supposed to be shown
   # (based on the answers and the conditional statements from .json)
   # If it is supposed to be shown, the question and its answer is printed
@@ -186,7 +156,8 @@ composeQuestions <- function(question, answers = answers, language_code = NULL){
       server_translate(answers[[question$Name]], language_code)
     )
     
-    answer <- paste0(" &escape&textbf{", resp, "} ")
+    # Change syntax based on output format
+    answer <- stringr::str_glue(" {ifelse(save_as == 'pdf', '&escape&textbf{', '**')}{resp}{ifelse(save_as == 'pdf', '}', '**')} ")
   } else if(question$Type == "comment"){
     answer <- ifelse(answers[[question$Name]] == "", server_translate("No comments.", language_code), answers[[question$Name]]) # If the comment box is empty
     answer <- paste0("\n\n> ", answer)
@@ -204,7 +175,7 @@ composeQuestions <- function(question, answers = answers, language_code = NULL){
   }
   
   if( !(question$Type %in% c("comment", "text"))){
-    label <- paste0(" ", server_translate(question$Label, language_code), " &escape&hfill")
+    label <- stringr::str_glue(" {server_translate(question$Label, language_code)} {ifelse(save_as == 'pdf', '&escape&hfill', '')}")
   } else if(question$Type == "text" || (question$Type == "comment" && question$Label != "Explain")){
     if(question$Label == ""){
       label <- paste0("\n")
@@ -221,6 +192,7 @@ composeQuestions <- function(question, answers = answers, language_code = NULL){
   return(body)
 }
 
+#' @rdname render_document
 renderReferences <- function(language_code = NULL){
 out <- "
 ## &Refs
