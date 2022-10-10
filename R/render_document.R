@@ -28,6 +28,7 @@ header-includes:
   - \\newfontfamily\\cyrillicfont{{FreeSerif}}
   - \\newfontfamily\\hebrewfont{{FreeSerif}}
   - \\newfontfamily\\greekfont{{FreeSerif}}
+  - \\newfontfamily\\hangulfont{{Noto Serif CJK KR}}
 lang: {language_code}
 output: 
   {paste0(save_as, '_document')}:
@@ -49,19 +50,6 @@ language_code = language_code,
 corr_author_label = server_translate("Corresponding author's email address", language_code),
 link_label = server_translate("Link to Project Repository", language_code)
 )
-
-  # and fill the header with information taken from the question in the head
-  # date <- format(Sys.time(), '%d/%m/%Y')
-
-  # headYaml <- gsub("&studyTitle",         answers$studyTitle,                                  headYaml)
-  # headYaml <- gsub("&authorNames",        answers$authorNames,                                 headYaml)
-  # headYaml <- gsub("&correspondingEmail", answers$correspondingEmail,                          headYaml)
-  # headYaml <- gsub("&linkToRepository",   answers$linkToRepository,                            headYaml)
-  # headYaml <- gsub("&date",               date,                                                headYaml)
-  # headYaml <- gsub("&languageCode",       language_code,                   headYaml)
-  # headYaml <- gsub("&subTitle",           server_translate("Transparency Report 1.0 (full, 36 items)", language_code),  headYaml)
-  # headYaml <- gsub("&corrAuthorsLabel",   server_translate("Corresponding author's email address", language_code),      headYaml)
-  # headYaml <- gsub("&linkToRepoLabel",    server_translate("Link to Project Repository", language_code),                headYaml)
   
   # fill in answers with "not answered" - important for generating the files
   bundleQuestions <- getItemList(sectionsList)
@@ -75,6 +63,9 @@ link_label = server_translate("Link to Project Repository", language_code)
   references <- renderReferences(language_code = language_code)
   # combine everything together
   rmd <- paste(c(headYaml, sections, references), collapse = "\n")
+  
+  # print created document for testing purposes
+  print(rmd)
   
   rmd
 }
