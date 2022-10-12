@@ -105,7 +105,18 @@ golem_add_external_resources <- function(){
   add_resource_path(
     'www', app_sys('app/www')
   )
- 
+  
+  # Clean up
+  onStop(function() {
+    # Get all files in the directories, recursively
+    f <- list.files(app_sys('app/www/doc/'), include.dirs = F, full.names = T, recursive = T)
+    
+    print("Deleting generated previews...")
+    
+    # remove the files
+    file.remove(f)
+  })
+  
   tags$head(
     favicon(),
     bundle_resources(

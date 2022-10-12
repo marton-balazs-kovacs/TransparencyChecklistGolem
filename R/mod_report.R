@@ -220,12 +220,16 @@ mod_report_server <- function(id, checklist, answers, language_code){
         )
       } else{
         # save_as <- ifelse(input$save_as == "word", "docx", input$save_as)
-        out_file <- paste0("preview.", input$save_as)
+        # out_file <- paste0("preview.", input$save_as)
+        out_file <- fs::file_temp("preview", tmp_dir = app_sys("app/www/doc"), ext = paste0(".", input$save_as))
         
-        rmarkdown::render(RmdPath, output_file = out_file, output_dir = app_sys("app/www/doc"),
-                          envir = new.env(parent = globalenv()))
-        src_file <- file.path("www/doc", out_file)
-
+        rmarkdown::render(RmdPath, output_file = out_file,
+                          # output_dir = app_sys("app/www/doc"),
+                          envir = new.env(parent = globalenv())
+                          )
+        # src_file <- file.path("www/doc", out_file)
+        src_file <- stringr::str_extract(out_file, "www/doc/\\w+.\\w+")
+  
         modalDialog(
           shinycssloaders::withSpinner(tags$iframe(style = "height:600px; width:100%", src = src_file)),
           easyClose = TRUE,

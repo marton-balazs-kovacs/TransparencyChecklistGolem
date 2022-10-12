@@ -5,9 +5,9 @@ account: martonbalazskovacs
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6580142
-bundleId: 6116594
+bundleId: 6393589
 url: https://martonbalazskovacs.shinyapps.io/TransparencyChecklistGolemFull/
-when: 1658340867.35237
-lastSyncTime: 1658340867.35239
+when: 1665536407.08559
+lastSyncTime: 1665536407.08562
 asMultiple: FALSE
 asStatic: FALSE
