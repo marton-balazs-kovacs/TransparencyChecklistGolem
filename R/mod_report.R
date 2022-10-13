@@ -218,20 +218,30 @@ mod_report_server <- function(id, checklist, answers, language_code){
           includeMarkdown(RmdPath),
           easyClose = TRUE
         )
-      } else{
+      } else {
         # save_as <- ifelse(input$save_as == "word", "docx", input$save_as)
         # out_file <- paste0("preview.", input$save_as)
-        out_file <- fs::file_temp("preview", tmp_dir = app_sys("app/www/doc"), ext = paste0(".", input$save_as))
+        out_file <- fs::file_temp("preview",
+                                  # tmp_dir = app_sys("app/www/doc"),
+                                  ext = paste0(".", input$save_as))
         
         rmarkdown::render(RmdPath, output_file = out_file,
                           # output_dir = app_sys("app/www/doc"),
                           envir = new.env(parent = globalenv())
                           )
         # src_file <- file.path("www/doc", out_file)
-        src_file <- stringr::str_extract(out_file, "www/doc/\\w+.\\w+")
-  
+        # src_file <- stringr::str_extract(out_file, "www/doc/\\w+.\\w+")
+        
+        if(input$save_as == "pdf") {
+          mime_type <- "application/pdf"
+        } else if (input$save_as == "html") {
+          mime_type <- "text/html"
+        }
+        
+        b64 <- base64enc::dataURI(file = out_file, mime = mime_type)
+        
         modalDialog(
-          shinycssloaders::withSpinner(tags$iframe(style = "height:600px; width:100%", src = src_file)),
+          shinycssloaders::withSpinner(tags$iframe(style = "height:600px; width:100%", src = b64)),
           easyClose = TRUE,
           footer = NULL
         )

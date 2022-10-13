@@ -6,6 +6,7 @@ Description: A shiny app for the consensus-based transparency checklist develope
 License: MIT + file LICENSE
 Imports: 
     attempt,
+    base64enc,
     config (>= 0.3.1),
     gemstones (>= 0.0.0.9000),
     golem (>= 0.3.1),
