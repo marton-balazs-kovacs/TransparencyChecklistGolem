@@ -65,7 +65,7 @@ link_label = server_translate("Link to Project Repository", language_code)
   rmd <- paste(c(headYaml, sections, references), collapse = "\n")
   
   # print created document for testing purposes
-  print(rmd)
+  # print(rmd)
   
   rmd
 }

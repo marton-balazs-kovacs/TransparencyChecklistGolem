@@ -211,11 +211,14 @@ mod_report_server <- function(id, checklist, answers, language_code){
       RmdPath <- file.path(tempdir(), "report.Rmd")
       writeLines(RmdFile(), con = RmdPath)
       
+      # print rmd for testing purposes
+      # print(RmdFile())
+      
       if(input$save_as %in% c("word", "rtf")){
         modalDialog(
           showNotification(with_i18n("Word and rtf files cannot be previewed in the browser, displaying markdown file", NULL),
                            type = "warning", closeButton = FALSE, duration = 7),
-          includeMarkdown(RmdPath),
+          shiny::includeMarkdown(RmdPath),
           easyClose = TRUE
         )
       } else {

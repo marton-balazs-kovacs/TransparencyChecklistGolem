@@ -141,7 +141,7 @@ server_translate <- function(i18n, language_code = NULL) {
   
   # Validate result
   if (is.null(translation)) {
-    stop("Can't find the key in the local JSON")
+    stop(paste("Can't find the key in the local JSON:", i18n))
   } else {
     return(translation)
   }

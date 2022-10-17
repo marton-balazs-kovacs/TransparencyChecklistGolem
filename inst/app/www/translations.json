@@ -1321,7 +1321,7 @@
       "Vietnamese": ["Vui lòng chọn một tùy chọn"]
     },
     {
-      "English": ["before any data were collected."],
+      "English": ["before any data were collected"],
       "Arabic": ["قبل أن يتم جمع أي بيانات."],
       "Brazilian Portuguese": ["antes de qualquer dado ser coletado."],
       "Bulgarian": ["преди събирането на данните."],
@@ -1351,7 +1351,7 @@
       "Vietnamese": ["trước khi thu nhập dữ liệu."]
     },
     {
-      "English": ["after some data were collected, but before exploring the data."],
+      "English": ["after some data were collected, but before exploring the data"],
       "Arabic": ["بعد أن تم جمع بعض البيانات، ولكن قبل استكشاف البيانات."],
       "Brazilian Portuguese": ["depois de alguns dados serem coletados, mas antes de explorar os dados."],
       "Bulgarian": ["след събирането на част от данните, но преди изследването им."],
@@ -1381,7 +1381,7 @@
       "Vietnamese": ["sau khi đã thu nhập một phần dữ liệu, nhưng trước khi xử lý dữ liệu."]
     },
     {
-      "English": ["after all data were collected, but before exploring the data."],
+      "English": ["after all data were collected, but before exploring the data"],
       "Arabic": ["بعد أن تم جمع جميع البيانات، ولكن قبل استكشاف البيانات."],
       "Brazilian Portuguese": ["depois de todos os dados serem coletados, mas antes de explorar os dados."],
       "Bulgarian": ["след събирането на всички данни, но преди изследването им."],
@@ -1411,7 +1411,7 @@
       "Vietnamese": ["sau khi thu nhập tất cả dữ liệu, nhưng trước khi xử lý dữ liệu."]
     },
     {
-      "English": ["after exploring the data, but before any statistical analyses were conducted."],
+      "English": ["after exploring the data, but before any statistical analyses were conducted"],
       "Arabic": ["بعد استكشاف البيانات، ولكن قبل إجراء أي تحليلات إحصائية."],
       "Brazilian Portuguese": ["depois de explorar os dados, mas antes de qualquer análise estatística ter sido realizada."],
       "Bulgarian": ["след изследването на данните, но преди провеждането на статистически анализи"],
@@ -1441,7 +1441,7 @@
       "Vietnamese": ["sau khi nhìn tổng quan bộ dữ liệu, nhưng trước khi tiến hành phân tích thống kê bộ dữ liệu."]
     },
     {
-      "English": ["after some but not all statistical analyses were conducted."],
+      "English": ["after some but not all statistical analyses were conducted"],
       "Arabic": ["بعد اجراء بعض وليس كل التحليلات الإحصائية."],
       "Brazilian Portuguese": ["depois de algumas, mas não todas as, análises estatísticas terem sido conduzidas"],
       "Bulgarian": ["след провеждането на няколко, но не и на всички статистически анализи."],
@@ -1471,7 +1471,7 @@
       "Vietnamese": ["sau khi thực hiện một số bước phân tích dữ liệu nhưng chưa hoàn toàn hoàn thiện việc phân tích."]
     },
     {
-      "English": ["at another time, explain:"],
+      "English": ["at another time, explain"],
       "Arabic": ["في وقت آخر ، اشرح:"],
       "Brazilian Portuguese": ["em outro momento, explique:"],
       "Bulgarian": ["по друго време, обяснете:"],
