@@ -9,9 +9,9 @@
 NULL
 
 #' @rdname render_document
-composeRmd <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL, save_as = "pdf"){
-  # returns a string
-  
+composeRmd <- function(answers = NULL, sectionsList = NULL, headList = NULL, answerList = NULL, language_code = NULL, save_as = "pdf", short_checklist = NULL){
+  # Get subtitle based on short or long checklist
+  subtitle <- ifelse(short_checklist, "Transparency Report 1.0 (short, 12 items)", "Transparency Report 1.0 (full, 36 items)")
   # First, we create the YAML header of the rmd file (be carefully about indentation, can automatically generate another header which screws everything)
   headYaml <- stringr::str_glue(
 "---
@@ -42,7 +42,7 @@ babel-lang: chinese-simplified
 ",
 save_as = save_as,
 study_title = ifelse(answers$studyTitle == "", server_translate("Untitled", language_code), answers$studyTitle),
-sub_title = server_translate("Transparency Report 1.0 (full, 36 items)", language_code),
+sub_title = server_translate(subtitle, language_code),
 author_names =  answers$authorNames,
 corresponding_email = answers$correspondingEmail,
 link_to_rep = answers$linkToRepository,

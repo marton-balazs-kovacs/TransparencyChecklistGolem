@@ -184,7 +184,8 @@ mod_report_server <- function(id, checklist, answers, language_code){
         headList = checklist$headList,
         answerList = checklist$answerList,
         save_as = input$save_as,
-        language_code = isolate(language_code())
+        language_code = isolate(language_code()),
+        short_checklist = golem::get_golem_options("short_checklist")
         )
     })
 
@@ -279,7 +280,8 @@ mod_report_server <- function(id, checklist, answers, language_code){
           headList = checklist$headList,
           answerList = checklist$answerList,
           save_as = input$save_as,
-          language_code = language_code()
+          language_code = language_code(),
+          short_checklist = golem::get_golem_options("short_checklist")
           )
 
         # print the Rmd document in the console (for debugging)
