@@ -146,3 +146,20 @@ server_translate <- function(i18n, language_code = NULL) {
     return(translation)
   }
 }
+
+#' Transform dataframe to list
+#' 
+#' @param x a data frame with translations in rows and languages in columns
+#' 
+#' @returns a list of length 2 with x[[1]] has the vector of languages and x[[2]] has the translations
+df2list <- function(x){
+  out <- list()
+  out[['languages']] <- as.list(colnames(x))
+  out[['translation']] <- list()
+  
+  for(i in 1:nrow(x)){
+    out[['translation']][[i]] <- as.list(x[i,])
+  }
+  
+  return(out)
+}

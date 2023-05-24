@@ -1,26 +1,41 @@
 # TODO: "All Authors [Given name(s) Surname;]" not translated if used as a key I guess it is because special characters are used
 # have to find a robust way for taking out special characters from keys  and referencing them in the app.
 
+# Load packages
 library(rjson)
 library(purrr)
 library(stringr)
 library(tibble)
 library(rlang)
 
+# Load translations and language ISO codes
 translations <- rjson::fromJSON(file = "./inst/app/www/translations.json")
 language_codes <- rjson::fromJSON(file = "./inst/app/www/language_codes.json")
 
+# Show the names of the lists
 names(language_codes)
 names(translations)
 
+# Assign ISO codes to translated lanugage names
+# TODO: Right now they are connected by order but it would be safer to connect through lookup
+# English should be the first language then the rest
+english_index <- which(translations[["languages"]] == "English")
+language_order_by <- c("English", sort(translations[["languages"]][-english_index]))
+
+# Drop languages list from translations
 translations[["languages"]] <- NULL
 
+language_translation <- purrr::pluck(translations, 1, 1) %>% .[language_order_by]
+  
 language_list <- language_codes %>%
-  rlang::set_names(purrr::pluck(translations, 1, 1))
+  .[language_order_by] %>% 
+  rlang::set_names(language_translation)
 
 language_list_json <- jsonlite::toJSON(language_list, pretty = TRUE, auto_unbox = TRUE)
 
 write(language_list_json, "inst/app/www/language_list.json")
+
+# Process translations to be formatted as gemstones wants it
 
 translations <- purrr::flatten(translations)
 
@@ -57,3 +72,4 @@ i18n_translations <- jsonlite::toJSON(transpose_translations, pretty = TRUE, aut
 write(i18n_translations, "inst/app/www/i18n_locales.json")
 
 # usethis::use_data(transform_json, overwrite = TRUE)
+
