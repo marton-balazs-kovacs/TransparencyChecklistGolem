@@ -121,11 +121,15 @@ get_language <- function(
 #' 
 #' @description This is a simple function for doing server side translations.
 #' Not an ideal solution but I do not want to use shiny.i18n on top of the gemstones' functions.
+#' @param i18n character. Key of text to be translated
+#' @param language_code character. Language code of the output language
+#' @param local character. Either a path or a URL to the JSON file containing the translations
 #' 
 #' @noRd
-server_translate <- function(i18n, language_code = NULL) {
+server_translate <- function(i18n, language_code = NULL, local = "https://raw.githubusercontent.com/marton-balazs-kovacs/TransparencyChecklistGolem/master/inst/app/www/i18n_locales.json") {
   # Get the JSON containing localization
-  local <- rjson::fromJSON(file = app_sys("app/www/i18n_locales.json"))
+  # Use app_sys("app/www/i18n_locales.json") for loading the translations from a local file
+  local <- rjson::fromJSON(file = local)
   
   # Filter by language code
   lang <- purrr::pluck(local, language_code, "translation")

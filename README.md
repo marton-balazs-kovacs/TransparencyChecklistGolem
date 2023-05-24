@@ -27,19 +27,19 @@ version of the checklist is available at
 
 ### How to use it?
 
--   The checklist refers to a single study of interest.
--   Please respond to each checklist item. If necessary, you can provide
-    an explanation at the end of each section.
--   When the question refers to your manuscript, this includes all
-    supplementary materials and appendices that are relevant to the
-    study of interest.
--   After all the questions have been answered, you can generate a
-    transparency report for your study by pressing the button labeled
-    GENERATE REPORT at the bottom of the page.
--   Save your transparency report on your computer. Note that after you
-    download your report, your responses on the checklist will not be
-    saved by our webpage.
--   Upload your transparency report to a public repository.
+- The checklist refers to a single study of interest.
+- Please respond to each checklist item. If necessary, you can provide
+  an explanation at the end of each section.
+- When the question refers to your manuscript, this includes all
+  supplementary materials and appendices that are relevant to the study
+  of interest.
+- After all the questions have been answered, you can generate a
+  transparency report for your study by pressing the button labeled
+  GENERATE REPORT at the bottom of the page.
+- Save your transparency report on your computer. Note that after you
+  download your report, your responses on the checklist will not be
+  saved by our webpage.
+- Upload your transparency report to a public repository.
 
 ### What does this repository contain?
 
@@ -97,3 +97,31 @@ BibTeX entry:
       title = {A consensus-based transparency checklist},
       journal = {Nature Human Behaviour}
     }
+
+### Translations
+
+The translations for the Transparency Checklist are done by using a
+Google spreadsheet template. The translations are then combined and
+transformed to JSON format. The app reads the translations from this
+repository upon starting. To include new translations in the app or
+update existing translations do the following steps:
+
+- Ask for access to the translation template on Google Drive from Balazs
+  Aczel.
+- Add a new translation or modify an existing one.
+- Run the code in the `data-raw/translations.R` file to combine the
+  translations and save them as JSON.
+- If you are adding a new language add the name of the language as it is
+  present in the title of the Google spreadsheet used for the
+  translation and a short ISO language code to the
+  `inst/app/www/language_codes.json` file.
+- Run the code in the `data-raw/transform_json.R` file to transform the
+  translations into an acceptable format for the i18n package that
+  handles the translations. The `inst/app/www/i18n_locales.json` and the
+  `inst/app/www/language_list.json` files should contain the changes you
+  made at the end of the process.
+- Stage, commit, then push the changes to the master branch and ask for
+  a pull request.
+- Once the pull request has been accepted the modifications to the
+  translations will be made available to the users on all deployed
+  versions of the application.
